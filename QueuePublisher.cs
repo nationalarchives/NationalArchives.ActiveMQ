@@ -13,7 +13,7 @@ namespace NationalArchives.ActiveMQ
         private readonly IDestination m_Destination;
         private bool m_IsDisposed = false;
 
-        public QueuePublisher(string brokerUri, string queueName)
+        public QueuePublisher(string brokerUri, string queueName, MsgDeliveryMode mode = MsgDeliveryMode.Persistent)
         {
             try
             {
@@ -23,12 +23,12 @@ namespace NationalArchives.ActiveMQ
                 m_Session = m_Connection.CreateSession();
                 m_Destination = m_Session.GetQueue(queueName);
                 m_Producer = m_Session.CreateProducer(m_Destination);
-                m_Producer.DeliveryMode = MsgDeliveryMode.Persistent;
+                m_Producer.DeliveryMode = mode;
             }
             catch (NMSConnectionException) { throw; }
         }
 
-        public QueuePublisher(string brokerUri, string queueName, string userName, string password)
+        public QueuePublisher(string brokerUri, string queueName, string userName, string password, MsgDeliveryMode mode = MsgDeliveryMode.Persistent)
         {
             foreach(string s in new string[] { brokerUri, queueName, userName, password })
             {
@@ -46,7 +46,7 @@ namespace NationalArchives.ActiveMQ
                 m_Session = m_Connection.CreateSession();
                 m_Destination = m_Session.GetQueue(queueName);
                 m_Producer = m_Session.CreateProducer(m_Destination);
-                m_Producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
+                m_Producer.DeliveryMode = mode;
             }
             catch (NMSConnectionException) { throw; }
         }

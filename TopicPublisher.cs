@@ -14,7 +14,7 @@ namespace NationalArchives.ActiveMQ
         private readonly ActiveMQTopic m_Topic;
         private bool m_IsDisposed = false;
 
-        public TopicPublisher(string brokerUri, string topicName)
+        public TopicPublisher(string brokerUri, string topicName, MsgDeliveryMode mode = MsgDeliveryMode.Persistent)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace NationalArchives.ActiveMQ
                 m_Session = m_Connection.CreateSession();
                 m_Topic = new ActiveMQTopic(topicName);
                 m_Producer = m_Session.CreateProducer(m_Topic);
-                m_Producer.DeliveryMode = MsgDeliveryMode.NonPersistent;
+                m_Producer.DeliveryMode = mode;
             }
             catch (NMSConnectionException) { throw; }
         }
